@@ -2,6 +2,7 @@ package webtech.savingzapp.web;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -34,11 +35,10 @@ public class TransactionController {
         return found != null ? ResponseEntity.ok(found) : ResponseEntity.notFound().build();
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<URI> addTransaction(@Valid @RequestBody Transaction body){
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Transaction> addTransaction(@Valid @RequestBody Transaction body){
         final TransactionWithID createdTransaction = transactionService.addTransaction(body);
-        final URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/" + createdTransaction.getId()).build().toUri();
-        return ResponseEntity.created(uri).build();
+        return new ResponseEntity<> (createdTransaction, HttpStatus.CREATED);
     }
 
     @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
