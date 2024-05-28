@@ -1,7 +1,8 @@
-package webtech.savingzapp;
+package webtech.savingzapp.model;
 
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -10,15 +11,16 @@ import java.time.LocalDate;
  * Represents a transaction with a name, category, date and amount.
  */
 @Getter
+@Setter
 public class Transaction {
 
     private String transactionName;
 
     private String transactionCategory;
 
-    private final BigDecimal transactionAmount;
+    private BigDecimal transactionAmount;
 
-    private final LocalDate transactionDate;
+    private LocalDate transactionDate;
 
     public Transaction(String transactionName,String transactionCategory,LocalDate transactionDate, BigDecimal transactionAmount) {
         this.transactionName = transactionName;
