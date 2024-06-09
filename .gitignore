@@ -1,5 +1,15 @@
-# Ignoriere den build Ordner
-build/
+*.class
+*.log
+*.war
+*.ear
+*.jar
+*.iml
 
-# Ignoriere den .gradle Ordner
+/build/
+/.gradle/
+/.idea/
+
+# Ignore Gradle wrapper files
+gradlew
+gradlew.bat
 .gradle/
