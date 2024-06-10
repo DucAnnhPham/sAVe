@@ -8,8 +8,4 @@
 /build/
 /.gradle/
 /.idea/
-
-# Ignore Gradle wrapper files
-gradlew
-gradlew.bat
 .gradle/
