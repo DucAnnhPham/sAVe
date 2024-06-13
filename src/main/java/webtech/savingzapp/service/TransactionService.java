@@ -5,10 +5,6 @@ import org.springframework.stereotype.Service;
 import webtech.savingzapp.model.Transaction;
 import webtech.savingzapp.persistance.TransactionRepository;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Optional;
 
 @Service
