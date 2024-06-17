@@ -16,17 +16,17 @@ public class SavingzUserService {
     private PasswordHashingService passwordHashingService;
 
     public ResponseEntity<Savingz_User> register(Savingz_User newSavingzUser) {
-    Savingz_User existingSavingzUser = savingzUserRepository.findByUsername(newSavingzUser.getUsername());
-    if (existingSavingzUser != null) {
-        throw new RuntimeException("Username already exists");
-    }
-    existingSavingzUser = savingzUserRepository.findByEmail(newSavingzUser.getEmail());
-    if (existingSavingzUser != null) {
-        throw new RuntimeException("Email already exists");
-    }
-    newSavingzUser.setPassword(passwordHashingService.hashPassword(newSavingzUser.getPassword()));
-    Savingz_User savedUser = this.savingzUserRepository.save(newSavingzUser);
-    return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+        Savingz_User existingSavingzUser = savingzUserRepository.findByUsername(newSavingzUser.getUsername());
+        if (existingSavingzUser != null) {
+            throw new RuntimeException("Username already exists");
+        }
+        existingSavingzUser = savingzUserRepository.findByEmail(newSavingzUser.getEmail());
+        if (existingSavingzUser != null) {
+            throw new RuntimeException("Email already exists");
+        }
+        newSavingzUser.setPassword(passwordHashingService.hashPassword(newSavingzUser.getPassword()));
+        Savingz_User savedUser = this.savingzUserRepository.save(newSavingzUser);
+        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
 
