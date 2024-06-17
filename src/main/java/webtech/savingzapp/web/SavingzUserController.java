@@ -36,7 +36,8 @@ public class SavingzUserController {
     public ResponseEntity<?> login(@RequestBody Savingz_User loginUser) {
         Savingz_User user = savingzUserService.login(loginUser.getUsername(), loginUser.getPassword());
         if (user != null){
-            return new ResponseEntity<>(user, HttpStatus.OK);
+            Long userId = user.getId();
+            return new ResponseEntity<>(userId, HttpStatus.OK);
         }
         else{
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
