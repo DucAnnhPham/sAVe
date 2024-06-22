@@ -80,9 +80,9 @@ public class TransactionServiceTest {
     @Test
     void testRemoveTransaction() {
         var t1 = new Transaction("Test", "Test", LocalDate.of(2024,6,22), BigDecimal.valueOf(100));
+        t1.setId(1L);
 
         doReturn(true).when(transactionRepository).existsById(1L);
-
         boolean actual = transactionService.removeTransaction(1L);
 
         assertEquals(true, actual);
