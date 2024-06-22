@@ -1,7 +1,6 @@
 package webtech.savingzapp.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +8,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import webtech.savingzapp.model.Transaction;
 import webtech.savingzapp.service.TransactionService;
 
@@ -17,6 +18,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -59,6 +61,44 @@ class TransactionControllerTest {
     void testGetTransactionByIdBadRequest() throws Exception {
         this.mockMvc.perform(get("/transactions/abc"))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void testAddTransaction() throws Exception {
+        final Transaction t1 = new Transaction("wasser", "Food", LocalDate.of(2021, 1, 1), BigDecimal.valueOf(1.5));
+        final String json = objectMapper.writeValueAsString(t1);
+        this.mockMvc.perform(post("/transactions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    void testUpdateTransaction_Success() throws Exception {
+        Transaction originalTransaction = new Transaction("wasser", "Food", LocalDate.of(2021, 1, 1), BigDecimal.valueOf(1.5));
+        originalTransaction.setId(1L);
+
+        Transaction updatedTransaction = new Transaction("cola", "Food", LocalDate.of(2021, 1, 1), BigDecimal.valueOf(2.0));
+        updatedTransaction.setId(originalTransaction.getId());
+
+        String json = objectMapper.writeValueAsString(updatedTransaction);
+
+        when(service.editTransaction(any(Transaction.class))).thenReturn(updatedTransaction);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/transactions/{id}", originalTransaction.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    void deleteTransaction() throws Exception {
+        final Transaction t1 = new Transaction("wasser", "Food", LocalDate.of(2021, 1, 1), BigDecimal.valueOf(1.5));
+        t1.setId(1L);
+        when(service.removeTransaction(1L)).thenReturn(true);
+        mockMvc.perform(MockMvcRequestBuilders.delete("/transactions/{id}", t1.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
 
