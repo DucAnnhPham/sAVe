@@ -24,9 +24,9 @@ public class Transaction {
 
     private String transactionCategory;
 
-    private BigDecimal transactionAmount;
-
     private LocalDate transactionDate;
+
+    private BigDecimal transactionAmount;
 
     public Transaction(String transactionName,String transactionCategory,LocalDate transactionDate, BigDecimal transactionAmount) {
         this.transactionName = transactionName;
@@ -35,4 +35,15 @@ public class Transaction {
         this.transactionAmount = transactionAmount.setScale(2, BigDecimal.ROUND_HALF_UP);
     }
     public Transaction() {}
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "id=" + id +
+                ", transactionName='" + transactionName + '\'' +
+                ", transactionCategory='" + transactionCategory + '\'' +
+                ", transactionDate=" + transactionDate +
+                ", transactionAmount=" + transactionAmount +
+                '}';
+    }
 }

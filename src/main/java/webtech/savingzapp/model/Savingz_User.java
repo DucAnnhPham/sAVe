@@ -26,4 +26,14 @@ public class Savingz_User {
     }
 
     public Savingz_User() {}
+
+    @Override
+    public String toString() {
+        return "Savingz_User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }
