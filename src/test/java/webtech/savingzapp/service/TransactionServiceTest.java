@@ -14,7 +14,7 @@ import java.util.Optional;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.*;
 
 
 @SpringBootTest
@@ -64,17 +64,23 @@ public class TransactionServiceTest {
 
     @Test
     void testEditTransaction() {
+        // Create a transaction
         var t1 = new Transaction("Test", "Test", LocalDate.of(2024,6,22), BigDecimal.valueOf(100));
-
         t1.setId(1L);
 
+        // Edit the transaction
+        var t2 = new Transaction("Test Edited", "Test", LocalDate.of(2024,6,22), BigDecimal.valueOf(100));
+        t2.setId(1L);
+
+        // Mock the repository methods
         doReturn(true).when(transactionRepository).existsById(t1.getId());
-        doReturn(t1).when(transactionRepository).save(t1);
+        doReturn(t2).when(transactionRepository).save(t2);
 
-        Transaction actual = transactionService.editTransaction(t1);
+        // Call the service method
+        Transaction actual = transactionService.editTransaction(t2);
 
-        assertEquals(t1.getTransactionName(), actual.getTransactionName());
-
+        // Assert that the returned transaction has the updated name
+        assertEquals(t2.getTransactionName(), actual.getTransactionName());
     }
 
     @Test
@@ -86,5 +92,6 @@ public class TransactionServiceTest {
         boolean actual = transactionService.removeTransaction(1L);
 
         assertEquals(true, actual);
+        verify(transactionRepository, times(1)).deleteById(1L);
     }
 }
