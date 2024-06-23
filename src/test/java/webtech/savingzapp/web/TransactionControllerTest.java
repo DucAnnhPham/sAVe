@@ -44,7 +44,11 @@ class TransactionControllerTest {
 
     @Test
     void testGetTransactionById() throws Exception {
+
+        //erwartetes ergebnis
         final String expected = "{\"id\":1,\"transactionName\":\"wasser\",\"transactionCategory\":\"Food\",\"transactionDate\":[2021,1,1],\"transactionAmount\":1.50}";
+
+        //tatächliches ergebnis/ausführung
         this.mockMvc.perform(get("/transactions/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -53,20 +57,26 @@ class TransactionControllerTest {
 
     @Test
     void testGetTransactionByIdNotFound() throws Exception {
+        //ergebnis sollte not found sein
         this.mockMvc.perform(get("/transactions/2"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     void testGetTransactionByIdBadRequest() throws Exception {
+        //ergebnis sollte bad request sein
         this.mockMvc.perform(get("/transactions/abc"))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void testAddTransaction() throws Exception {
+
+        //erwartetes ergebnis
         final Transaction t1 = new Transaction("wasser", "Food", LocalDate.of(2021, 1, 1), BigDecimal.valueOf(1.5));
         final String json = objectMapper.writeValueAsString(t1);
+
+        //tatächliches ergebnis/ausführung
         this.mockMvc.perform(post("/transactions")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
@@ -75,6 +85,8 @@ class TransactionControllerTest {
 
     @Test
     void testUpdateTransaction_Success() throws Exception {
+
+        //Eingabedaten
         Transaction originalTransaction = new Transaction("wasser", "Food", LocalDate.of(2021, 1, 1), BigDecimal.valueOf(1.5));
         originalTransaction.setId(1L);
 
@@ -83,8 +95,10 @@ class TransactionControllerTest {
 
         String json = objectMapper.writeValueAsString(updatedTransaction);
 
+        //Mocking
         when(service.editTransaction(any(Transaction.class))).thenReturn(updatedTransaction);
 
+        //Tatsächliches Ergebnis/ausführung
         mockMvc.perform(MockMvcRequestBuilders.put("/transactions/{id}", originalTransaction.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
@@ -93,9 +107,15 @@ class TransactionControllerTest {
 
     @Test
     void deleteTransaction() throws Exception {
+
+        //Eingabedaten
         final Transaction t1 = new Transaction("wasser", "Food", LocalDate.of(2021, 1, 1), BigDecimal.valueOf(1.5));
         t1.setId(1L);
+
+        //Mocking
         when(service.removeTransaction(1L)).thenReturn(true);
+
+        //Tatsächliches Ergebnis/ausführung
         mockMvc.perform(MockMvcRequestBuilders.delete("/transactions/{id}", t1.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());

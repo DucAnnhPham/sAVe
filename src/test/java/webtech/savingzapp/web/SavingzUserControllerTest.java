@@ -5,7 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import webtech.savingzapp.model.Savingz_User;
 import webtech.savingzapp.service.SavingzUserService;
@@ -41,6 +43,11 @@ class SavingzUserControllerTest {
 
     @Test
     void testRegisterUser() throws Exception {
+
+        //Mocking
+        when(service.register(any(Savingz_User.class))).thenReturn(new ResponseEntity<>(newUser, HttpStatus.CREATED));
+
+        //Ausführung des Test mit erwarteten Ergebnissen vergleichen
         mockMvc.perform(post("/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"username\": \"testUser\", \"email\": \"test@example.com\", \"password\": \"password123\"}"))
@@ -50,8 +57,11 @@ class SavingzUserControllerTest {
 
     @Test
     void testRegisterUserBadRequest() throws Exception {
+
+        //Mocking
         doThrow(new RuntimeException("Registration error")).when(service).register(any(Savingz_User.class));
 
+        //Ausführung des Test mit erwarteten Ergebnissen vergleichen
         mockMvc.perform(post("/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"username\": \"\", \"email\": \"test@example.com\", \"password\": \"password123\"}"))  // Assuming empty username causes error
@@ -61,8 +71,11 @@ class SavingzUserControllerTest {
 
     @Test
     void testLoginUser() throws Exception {
+
+        //Mocking
         when(service.login("testUser", "password123")).thenReturn(existingUser);
 
+        //Ausführung des Test mit erwarteten Ergebnissen vergleichen
         mockMvc.perform(post("/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"username\": \"testUser\", \"password\": \"password123\"}"))
@@ -72,8 +85,11 @@ class SavingzUserControllerTest {
 
     @Test
     void testLoginUserUnauthorized() throws Exception {
+
+        //Mocking
         when(service.login("testUser", "wrongPassword")).thenReturn(null);
 
+        //Ausführung des Test mit erwarteten Ergebnissen vergleichen
         mockMvc.perform(post("/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"username\": \"testUser\", \"password\": \"wrongPassword\"}"))

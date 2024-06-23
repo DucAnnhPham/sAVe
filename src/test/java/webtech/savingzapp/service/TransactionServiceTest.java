@@ -14,6 +14,7 @@ import java.util.Optional;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 
@@ -28,70 +29,85 @@ public class TransactionServiceTest {
 
     @Test
     void testGetTransaction() {
+
+        //Eingabedaten
         var t1 = new Transaction("Test", "Test", LocalDate.of(2024,6,22), BigDecimal.valueOf(100));
         var t2 = new Transaction("Test2", "Test2", LocalDate.of(2024,6,23), BigDecimal.valueOf(101));
 
+        //Mocking
         doReturn(Optional.of(t1)).when(transactionRepository).findById(1L);
         doReturn(Optional.of(t2)).when(transactionRepository).findById(2L);
 
+        //erwartetes Ergebnis
         Transaction actual = transactionService.getTransaction(1L).get();
 
+        //Vergleich
         assertEquals(t1.getTransactionName(), actual.getTransactionName());
     }
 
     @Test
     void testGetAllTransactions() {
+
+        //Eingabedaten
         var t1 = new Transaction("Test", "Test", LocalDate.of(2024,6,22), BigDecimal.valueOf(100));
         var t2 = new Transaction("Test2", "Test2", LocalDate.of(2024,6,23), BigDecimal.valueOf(101));
 
+        //Mocking
         doReturn(Arrays.asList(t1, t2)).when(transactionRepository).findAll();
 
+        //erwartetes Ergebnis
         Iterable<Transaction> actual = transactionService.getTransactions();
 
+        //Vergleich
         assertEquals(2, ((java.util.Collection<?>) actual).size());
     }
 
     @Test
     void testAddTransaction() {
+
+        //Eingabedaten
         var t1 = new Transaction("Test", "Test", LocalDate.of(2024,6,22), BigDecimal.valueOf(100));
 
+        //Mocking
         doReturn(t1).when(transactionRepository).save(t1);
 
+        //erwartetes Ergebnis
         Transaction actual = transactionService.addTransaction(t1);
 
+        //Vergleich
         assertEquals(t1.getTransactionName(), actual.getTransactionName());
     }
 
     @Test
     void testEditTransaction() {
-        // Create a transaction
+        // Eingabedaten
         var t1 = new Transaction("Test", "Test", LocalDate.of(2024,6,22), BigDecimal.valueOf(100));
         t1.setId(1L);
-
-        // Edit the transaction
+        // neue Daten
         var t2 = new Transaction("Test Edited", "Test", LocalDate.of(2024,6,22), BigDecimal.valueOf(100));
         t2.setId(1L);
 
-        // Mock the repository methods
+        // Mocking
         doReturn(true).when(transactionRepository).existsById(t1.getId());
         doReturn(t2).when(transactionRepository).save(t2);
-
-        // Call the service method
         Transaction actual = transactionService.editTransaction(t2);
 
-        // Assert that the returned transaction has the updated name
+        // Vergleich
         assertEquals(t2.getTransactionName(), actual.getTransactionName());
     }
 
     @Test
     void testRemoveTransaction() {
+
+        //Eingabedaten
         var t1 = new Transaction("Test", "Test", LocalDate.of(2024,6,22), BigDecimal.valueOf(100));
         t1.setId(1L);
 
+        //Mocking
         doReturn(true).when(transactionRepository).existsById(1L);
         boolean actual = transactionService.removeTransaction(1L);
 
-        assertEquals(true, actual);
+        assertTrue(actual);
         verify(transactionRepository, times(1)).deleteById(1L);
     }
 }
