@@ -31,8 +31,8 @@ public class TransactionServiceTest {
     void testGetTransaction() {
 
         //Eingabedaten
-        var t1 = new Transaction("Test", "Test", LocalDate.of(2024,6,22), BigDecimal.valueOf(100));
-        var t2 = new Transaction("Test2", "Test2", LocalDate.of(2024,6,23), BigDecimal.valueOf(101));
+        var t1 = new Transaction("Test", "Test", LocalDate.of(2024,6,22), BigDecimal.valueOf(100), 1L);
+        var t2 = new Transaction("Test2", "Test2", LocalDate.of(2024,6,23), BigDecimal.valueOf(101),1L);
 
         //Mocking
         doReturn(Optional.of(t1)).when(transactionRepository).findById(1L);
@@ -49,8 +49,8 @@ public class TransactionServiceTest {
     void testGetAllTransactions() {
 
         //Eingabedaten
-        var t1 = new Transaction("Test", "Test", LocalDate.of(2024,6,22), BigDecimal.valueOf(100));
-        var t2 = new Transaction("Test2", "Test2", LocalDate.of(2024,6,23), BigDecimal.valueOf(101));
+        var t1 = new Transaction("Test", "Test", LocalDate.of(2024,6,22), BigDecimal.valueOf(100), 1L);
+        var t2 = new Transaction("Test2", "Test2", LocalDate.of(2024,6,23), BigDecimal.valueOf(101),2L);
 
         //Mocking
         doReturn(Arrays.asList(t1, t2)).when(transactionRepository).findAll();
@@ -63,10 +63,27 @@ public class TransactionServiceTest {
     }
 
     @Test
+    void testGetTransactionByUserId() {
+
+        //Eingabedaten
+        var t1 = new Transaction("Test", "Test", LocalDate.of(2024,6,22), BigDecimal.valueOf(100), 1L);
+        var t2 = new Transaction("Test2", "Test2", LocalDate.of(2024,6,23), BigDecimal.valueOf(101),1L);
+
+        //Mocking
+        doReturn(Arrays.asList(t1, t2)).when(transactionRepository).findByUserId(1L);
+
+        //erwartetes Ergebnis
+        Iterable<Transaction> actual = transactionService.getTransactionByUserId(1L);
+
+        //Vergleich
+        assertEquals(2, ((java.util.Collection<?>) actual).size());
+    }
+
+    @Test
     void testAddTransaction() {
 
         //Eingabedaten
-        var t1 = new Transaction("Test", "Test", LocalDate.of(2024,6,22), BigDecimal.valueOf(100));
+        var t1 = new Transaction("Test", "Test", LocalDate.of(2024,6,22), BigDecimal.valueOf(100), 1L);
 
         //Mocking
         doReturn(t1).when(transactionRepository).save(t1);
@@ -81,10 +98,10 @@ public class TransactionServiceTest {
     @Test
     void testEditTransaction() {
         // Eingabedaten
-        var t1 = new Transaction("Test", "Test", LocalDate.of(2024,6,22), BigDecimal.valueOf(100));
+        var t1 = new Transaction("Test", "Test", LocalDate.of(2024,6,22), BigDecimal.valueOf(100), 1L);
         t1.setId(1L);
         // neue Daten
-        var t2 = new Transaction("Test Edited", "Test", LocalDate.of(2024,6,22), BigDecimal.valueOf(100));
+        var t2 = new Transaction("Test Edited", "Test", LocalDate.of(2024,6,22), BigDecimal.valueOf(100), 1L);
         t2.setId(1L);
 
         // Mocking
@@ -100,7 +117,7 @@ public class TransactionServiceTest {
     void testRemoveTransaction() {
 
         //Eingabedaten
-        var t1 = new Transaction("Test", "Test", LocalDate.of(2024,6,22), BigDecimal.valueOf(100));
+        var t1 = new Transaction("Test", "Test", LocalDate.of(2024,6,22), BigDecimal.valueOf(100), 1L);
         t1.setId(1L);
 
         //Mocking

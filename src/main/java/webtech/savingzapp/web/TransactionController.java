@@ -30,9 +30,15 @@ public class TransactionController {
         return found.isPresent() ? ResponseEntity.ok(found.get()) : ResponseEntity.notFound().build();
     }
 
+    @GetMapping(params = "userId", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Iterable<Transaction>> getTransactionByUserId(@RequestParam("userId") final long userId){
+        final Iterable<Transaction> found = transactionService.getTransactionByUserId(userId);
+        return ResponseEntity.ok(found);
+    }
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Transaction> addTransaction(@Valid @RequestBody Transaction body){
-        final Transaction t = new Transaction(body.getTransactionName(), body.getTransactionCategory(), body.getTransactionDate(), body.getTransactionAmount());
+        final Transaction t = new Transaction(body.getTransactionName(), body.getTransactionCategory(), body.getTransactionDate(), body.getTransactionAmount(), body.getUserId());
         final Transaction createdTransaction = transactionService.addTransaction(body);
         return new ResponseEntity<> (createdTransaction, HttpStatus.CREATED);
     }

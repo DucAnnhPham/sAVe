@@ -21,6 +21,10 @@ public class TransactionService {
         return this.transactionRepository.findAll();
     }
 
+    public Iterable<Transaction> getTransactionByUserId(Long userId) {
+        return this.transactionRepository.findByUserId(userId);
+    }
+
     public Transaction addTransaction(final Transaction transaction) {
         return this.transactionRepository.save(transaction);
     }

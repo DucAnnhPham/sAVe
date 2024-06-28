@@ -28,11 +28,14 @@ public class Transaction {
 
     private BigDecimal transactionAmount;
 
-    public Transaction(String transactionName,String transactionCategory,LocalDate transactionDate, BigDecimal transactionAmount) {
+    private Long userId;
+
+    public Transaction(String transactionName,String transactionCategory,LocalDate transactionDate, BigDecimal transactionAmount, Long userId) {
         this.transactionName = transactionName;
         this.transactionCategory = transactionCategory;
         this.transactionDate = transactionDate;
         this.transactionAmount = transactionAmount.setScale(2, BigDecimal.ROUND_HALF_UP);
+        this.userId = userId;
     }
     public Transaction() {}
 
@@ -44,6 +47,7 @@ public class Transaction {
                 ", transactionCategory='" + transactionCategory + '\'' +
                 ", transactionDate=" + transactionDate +
                 ", transactionAmount=" + transactionAmount +
+                ", userId=" + userId +
                 '}';
     }
 }

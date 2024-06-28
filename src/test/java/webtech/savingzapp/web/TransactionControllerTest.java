@@ -37,7 +37,7 @@ class TransactionControllerTest {
 
     @BeforeEach
     void setUpMockRepository() {
-        final Transaction t1 = new Transaction("wasser", "Food", LocalDate.of(2021, 1, 1), BigDecimal.valueOf(1.5));
+        final Transaction t1 = new Transaction("wasser", "Food", LocalDate.of(2021, 1, 1), BigDecimal.valueOf(1.5), 1L);
         t1.setId(1L);
         when(service.getTransaction(1L)).thenReturn(Optional.of(t1));
     }
@@ -46,7 +46,7 @@ class TransactionControllerTest {
     void testGetTransactionById() throws Exception {
 
         //erwartetes ergebnis
-        final String expected = "{\"id\":1,\"transactionName\":\"wasser\",\"transactionCategory\":\"Food\",\"transactionDate\":[2021,1,1],\"transactionAmount\":1.50}";
+        final String expected = "{\"id\":1,\"transactionName\":\"wasser\",\"transactionCategory\":\"Food\",\"transactionDate\":[2021,1,1],\"transactionAmount\":1.50,\"userId\":1}";
 
         //tatächliches ergebnis/ausführung
         this.mockMvc.perform(get("/transactions/1"))
@@ -73,7 +73,7 @@ class TransactionControllerTest {
     void testAddTransaction() throws Exception {
 
         //erwartetes ergebnis
-        final Transaction t1 = new Transaction("wasser", "Food", LocalDate.of(2021, 1, 1), BigDecimal.valueOf(1.5));
+        final Transaction t1 = new Transaction("wasser", "Food", LocalDate.of(2021, 1, 1), BigDecimal.valueOf(1.5), 1L);
         final String json = objectMapper.writeValueAsString(t1);
 
         //tatächliches ergebnis/ausführung
@@ -87,10 +87,10 @@ class TransactionControllerTest {
     void testUpdateTransaction_Success() throws Exception {
 
         //Eingabedaten
-        Transaction originalTransaction = new Transaction("wasser", "Food", LocalDate.of(2021, 1, 1), BigDecimal.valueOf(1.5));
+        Transaction originalTransaction = new Transaction("wasser", "Food", LocalDate.of(2021, 1, 1), BigDecimal.valueOf(1.5), 1L);
         originalTransaction.setId(1L);
 
-        Transaction updatedTransaction = new Transaction("cola", "Food", LocalDate.of(2021, 1, 1), BigDecimal.valueOf(2.0));
+        Transaction updatedTransaction = new Transaction("cola", "Food", LocalDate.of(2021, 1, 1), BigDecimal.valueOf(2.0), 1L);
         updatedTransaction.setId(originalTransaction.getId());
 
         String json = objectMapper.writeValueAsString(updatedTransaction);
@@ -109,7 +109,7 @@ class TransactionControllerTest {
     void deleteTransaction() throws Exception {
 
         //Eingabedaten
-        final Transaction t1 = new Transaction("wasser", "Food", LocalDate.of(2021, 1, 1), BigDecimal.valueOf(1.5));
+        final Transaction t1 = new Transaction("wasser", "Food", LocalDate.of(2021, 1, 1), BigDecimal.valueOf(1.5), 1L);
         t1.setId(1L);
 
         //Mocking
